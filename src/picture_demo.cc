@@ -9,6 +9,7 @@
 #include <opencv2/imgproc.hpp>
 #include <opencv2/imgcodecs.hpp>
 #include <opencv2/dnn.hpp>
+#include <iostream>
 
 void print_help() {
     printf("Usage: your_program [OPTIONS]\n");
@@ -36,11 +37,11 @@ int main (int argc, char* argv[]) {
     };
 
     // Default parameters
-    std::string input_path = "../data/bus.jpg";
+    std::string input_path = "../data/person3.jpg";
     std::string model_path = "../data/yolov8n_no_tail.rknn";
-    std::string output_path = "./debug.png";
-    float score_threshold = 0.4;
-    float nms_threshold = 0.5;
+    std::string output_path = "./result_person3.png";
+    float score_threshold = 0.6;
+    float nms_threshold = 0.45;
     bool debug_flag = true;
 
     //Temp var
@@ -49,6 +50,7 @@ int main (int argc, char* argv[]) {
     // Parse options
     int opt = 0;
     while ((opt = getopt_long(argc, argv, "i:m:o:d:h", long_options, NULL)) != -1) {
+        
         switch (opt) {
             case 'i':
                 input_path = optarg;
@@ -61,6 +63,7 @@ int main (int argc, char* argv[]) {
                 break;
             case 's':
                 score_threshold = atof(optarg);
+                // std::cout<<score_threshold<<std::endl;
                 break;
             case 'n':
                 nms_threshold = atof(optarg);
@@ -101,7 +104,14 @@ int main (int argc, char* argv[]) {
     rknn_net_inference(yolov8, (int8_t*)img.data, outputs);
 
     // Post process to get the detection result
-    std::vector<DetectionResult> results = yolov8_tail_post_process(outputs, 80, scale_x, scale_y, 0.4, 0.8, debug_flag);
+    std::cout<<*outputs[0]<<std::endl;
+    std::cout<<*outputs[1]<<std::endl;
+    std::cout<<*outputs[2]<<std::endl;
+    std::cout<<*outputs[3]<<std::endl;
+    std::cout<<*outputs[4]<<std::endl;
+    std::cout<<*outputs[5]<<std::endl;
+
+    std::vector<DetectionResult> results = yolov8_tail_post_process(outputs, 80, scale_x, scale_y, score_threshold, nms_threshold, debug_flag);
 
     yolov8_draw_result(results, output_img, coco_classes, 80);
 

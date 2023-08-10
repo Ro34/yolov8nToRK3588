@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.4.1)
 
-project(rknn_yolov8_demo)
+project(rknn_yolov8_demo2)
 
 include_directories(${CMAKE_SOURCE_DIR}/include)
 

@@ -162,6 +162,8 @@ std::vector<DetectionResult> yolov8_tail_post_process(float** input, int class_n
             base_y = y*l_size[l];
             for (int x=0; x<l_size[l]; ++x) {
                 get_max_confidence(input[confi_idx[l]], item_size, base_y+x, class_num, &score, &class_id);
+                // std::cout<<"post"<<std::endl;
+                // std::cout<<score_threshold<<std::endl;
                 if (score < score_threshold) continue;
                 x1 = wsum_softmax(input[box_idx[l]], item_size, base_y+x, 0);
                 y1 = wsum_softmax(input[box_idx[l]], item_size, base_y+x, 1);
